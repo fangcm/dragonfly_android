@@ -14,6 +14,10 @@ public class MainService extends IntentService {
     private static final String EXTRA_PARAM2 = "com.fangcm.dragonfly.extra.PARAM2";
 
 
+    public MainService() {
+        super("MainService");
+    }
+
     public static void startActionReentry(Context context) {
         Intent intent = new Intent(context, MainService.class);
         intent.setAction(ACTION_REENTRY);
@@ -26,10 +30,6 @@ public class MainService extends IntentService {
         intent.putExtra(EXTRA_PARAM1, param1);
         intent.putExtra(EXTRA_PARAM2, param2);
         context.startService(intent);
-    }
-
-    public MainService() {
-        super("MainService");
     }
 
     @Override

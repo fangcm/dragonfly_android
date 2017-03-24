@@ -8,6 +8,7 @@ import android.net.ConnectivityManager;
 import com.fangcm.dragonfly.MainService;
 
 public class ConnReceiver extends BroadcastReceiver {
+
     @Override
     public void onReceive(Context context, Intent intent) {
         if (ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())) {
