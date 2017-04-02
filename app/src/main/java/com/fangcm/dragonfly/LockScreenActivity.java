@@ -1,7 +1,9 @@
 package com.fangcm.dragonfly;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +15,7 @@ import android.widget.TextView;
 public class LockScreenActivity extends Activity {
     private static final String TAG = "LockScreenActivity";
 
+    private SharedPreferences preferences;
     private TextView txtClock;
 
     @Override
@@ -32,6 +35,18 @@ public class LockScreenActivity extends Activity {
             actionBar.hide();
         }
 */
+        MainService.startActionCountDownTimer(this);
+
+        preferences = getSharedPreferences("dragonfly", Context.MODE_PRIVATE);
+        //判断是不是首次登录，
+        if (preferences.getBoolean("firststart", true)) {
+            SharedPreferences.Editor editor = preferences.edit();
+            //将登录标志位设置为false，下次登录时不在显示首次登录界面
+            editor.putBoolean("firststart", false);
+            editor.commit();
+
+            finish();
+        }
     }
 
     //Activity的启动模式(launchMode),通过这个方法接受Intent
@@ -50,8 +65,6 @@ public class LockScreenActivity extends Activity {
     }
 
     private void handleIntent(Intent intent) {
-        MainService.startActionCountDownTimer(this);
-
         String action = intent.getAction();
         if (MainService.ACTION_LOCK_SCREEN_START.equals(action)) {
 

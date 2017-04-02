@@ -13,7 +13,7 @@ public class CountdownReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (MainService.ACTION_NORMAL_TICK.equals(intent.getAction())) {
+        if (MainService.ACTION_NORMAL_SCREEN_TICK.equals(intent.getAction())) {
             Log.i(TAG, "onReceive ACTION_NORMAL_TICK");
         }
     }
