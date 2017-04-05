@@ -17,28 +17,36 @@ import com.fangcm.dragonfly.receiver.LockScreenReceiver;
 public class MainService extends Service {
     private static final String TAG = "MainService";
 
-    private static final String ACTION_START_COUNTDOWN = "dragonfly.action.start.countdown";
+    private static final String ACTION_START_SERVICE = "dragonfly.action.start.service";
 
     public static final String ACTION_NORMAL_SCREEN_TICK = "dragonfly.action.normalScreen.tick";
     public static final String ACTION_LOCK_SCREEN_START = "dragonfly.action.lockScreen.start";
     public static final String ACTION_LOCK_SCREEN_TICK = "dragonfly.action.lockScreen.tick";
     public static final String ACTION_LOCK_SCREEN_FINISH = "dragonfly.action.lockScreen.finish";
 
+    private boolean serviceStarted = false;
     private boolean currentLockScreen = false;
     private long lockScreenSeconds = 120;
     private long normalScreenSeconds = 120;
-    private boolean timerFinished = true;
     private CountDownTimer countDownTimer = null;
     private LocalBroadcastManager localBroadcastManager = null;
     private LockScreenReceiver lockScreenReceiver = null;
     private CountdownReceiver countdownReceiver = null;
 
 
+    private void startCountDownTimer() {
+        if (currentLockScreen) {
+            startCountDownTimer(lockScreenSeconds, true);
+        } else {
+            startCountDownTimer(normalScreenSeconds, false);
+        }
+        currentLockScreen = !currentLockScreen;
+    }
+
     private void startCountDownTimer(final long totalSeconds, final boolean lockScreen) {
         Log.i(TAG, "Starting timer...");
 
         cancelCountDownTimer();
-        timerFinished = false;
         countDownTimer = new CountDownTimer(totalSeconds * 1000, lockScreen ? 1000 : 30000) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -53,9 +61,8 @@ public class MainService extends Service {
             public void onFinish() {
                 Intent intent = lockScreen ? new Intent(ACTION_LOCK_SCREEN_FINISH) : new Intent(ACTION_LOCK_SCREEN_START);
                 localBroadcastManager.sendBroadcast(intent);
-                timerFinished = true;
                 Log.i(TAG, "Timer finished");
-                MainService.startActionCountDownTimer(getApplicationContext());
+                MainService.startService(getApplicationContext());
             }
         };
 
@@ -68,7 +75,6 @@ public class MainService extends Service {
             countDownTimer = null;
             Log.i(TAG, "Timer cancelled");
         }
-        timerFinished = true;
     }
 
     @Override
@@ -104,21 +110,17 @@ public class MainService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (timerFinished) {
-            if (currentLockScreen) {
-                startCountDownTimer(lockScreenSeconds, true);
-            } else {
-                startCountDownTimer(normalScreenSeconds, false);
-            }
-            currentLockScreen = !currentLockScreen;
+        if (!serviceStarted) {
+            serviceStarted = true;
+            startCountDownTimer();
         }
 
         return START_REDELIVER_INTENT;
     }
 
-    public static void startActionCountDownTimer(Context context) {
+    public static void startService(Context context) {
         Intent intent = new Intent(context, MainService.class);
-        intent.setAction(ACTION_START_COUNTDOWN);
+        intent.setAction(ACTION_START_SERVICE);
         context.startService(intent);
     }
 

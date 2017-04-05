@@ -14,7 +14,7 @@ public class BootReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
             Log.i(TAG, "onReceive ACTION_BOOT_COMPLETED");
-            MainService.startActionCountDownTimer(context);
+            MainService.startService(context);
         }
     }
 }

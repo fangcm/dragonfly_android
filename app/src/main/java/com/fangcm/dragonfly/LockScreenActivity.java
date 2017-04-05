@@ -35,7 +35,7 @@ public class LockScreenActivity extends Activity {
             actionBar.hide();
         }
 */
-        MainService.startActionCountDownTimer(this);
+        MainService.startService(this);
 
         preferences = getSharedPreferences("dragonfly", Context.MODE_PRIVATE);
         //判断是不是首次登录，

@@ -15,7 +15,7 @@ public class ConnReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if (ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())) {
             Log.i(TAG, "onReceive CONNECTIVITY_ACTION");
-            MainService.startActionCountDownTimer(context);
+            MainService.startService(context);
         }
     }
 }

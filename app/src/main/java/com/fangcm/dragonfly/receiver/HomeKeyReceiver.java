@@ -26,13 +26,13 @@ public class HomeKeyReceiver extends BroadcastReceiver {
                     // home key处理点
 
                     System.out.println("Home home home");
-                    MainService.startActionCountDownTimer(context);
+                    MainService.startService(context);
 
                 } else if (reason.equals(SYSTEM_RECENT_APPS)) {
                     // long home key处理点
 
                     System.out.println("Long long Home home home");
-                    MainService.startActionCountDownTimer(context);
+                    MainService.startService(context);
                 }
             }
         }
